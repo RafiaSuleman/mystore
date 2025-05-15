@@ -1,18 +1,17 @@
 import { ProductDetail } from "@/components/product-detail";
 import { stripe } from "../../../../lib/stripe";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default async function ProductPage({ params }: PageProps) {
-  const product = await stripe.products.retrieve(params.id, {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const {id} = await params; // Await the promise to get the id
+  // to fetch data
+  const product =await stripe.products.retrieve(id, {
     expand: ["default_price"],
   });
 
-  const plainProduct = JSON.parse(JSON.stringify(product));
-
-  return <ProductDetail product={plainProduct} />;
+const plainProduct = JSON.parse(JSON.stringify(product));
+  return <ProductDetail product = {plainProduct}/>;
 }
